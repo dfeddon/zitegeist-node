@@ -1,0 +1,12 @@
+{
+  "name": "iwonder-node",
+  "version": "0.0.1",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "connect": "^3.4.1",
+    "ejs": "^2.4.1",
+    "express": "latest",
+    "gulp": "latest",
+    "mongoose": "^4.4.8"
+  }
+}
