@@ -1,10 +1,10 @@
-var User = require('mongoose').model('User');
+var Patron = require('mongoose').model('Patron');
 
 exports.create = function(req, res, next)
 {
-  console.log('creating user', req.body);
-  var user = new User(req.body);
-  user.save(function(err)
+  console.log('creating patron', req.body);
+  var patron = new Patron(req.body);
+  patron.save(function(err)
   {
     if (err)
     {
@@ -13,23 +13,23 @@ exports.create = function(req, res, next)
     }
     else
     {
-      console.log('good', user);
-      res.json(user);
+      console.log('good', patron);
+      res.json(patron);
     }
   });
 };
 
 exports.list = function(req, res, next)
 {
-    User.find({}, function(err, users)
+    Patron.find({}, function(err, patrons)
     {
         if (err)
         {
             return next(err);
         }
-        else 
+        else
         {
-            res.json(users);
+            res.json(patrons);
         }
     });
 };
