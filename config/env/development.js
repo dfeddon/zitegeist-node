@@ -3,5 +3,5 @@ var port = 1337;
 module.exports =
 {
   port: port,
-  db: 'mongodb://localhost/iwonder-dev'
+  db: 'mongodb://localhost/zitegeist-dev'
 };

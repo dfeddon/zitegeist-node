@@ -18,6 +18,9 @@ module.exports = function()
 
     require('../app/routes/index.server.routes.js')(app);
     require('../app/routes/brands.server.routes.js')(app);
+    require('../app/routes/patrons.server.routes.js')(app);
+    require('../app/routes/campaigns.server.routes.js')(app);
+    require('../app/routes/beacons.server.routes.js')(app);
 
     app.use(express.static('./public'));
 
