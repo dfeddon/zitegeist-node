@@ -3,9 +3,8 @@ var mongoose = require('mongoose'),
 
 var BeaconSchema = new Schema(
 {
-    name:               { type:String, required:false },
-    brandScore:         { type:Number, required:false, default:0 },
-    archived:           { type:Boolean, required:false, default:false }
+    name:               { type:String, unique:true, required:false },
+    fame:               { type:Number, required:false }
 },
 {
     timestamps:

@@ -4,9 +4,9 @@ var mongoose = require('mongoose'),
 var BrandSchema = new Schema(
 {
     name:               { type:String, unique:true, required:false },
-    patrons:            [ 'Patrons' ],
+    users:              [ 'Users' ],
     campaigns:          [ 'Campaigns' ],
-    admin:              { type:Schema.Types.ObjectId, ref:'Patrons' }
+    admin:              { type:Schema.Types.ObjectId, ref:'Users' }
 },
 {
     timestamps:
