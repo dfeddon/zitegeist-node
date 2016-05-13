@@ -9,6 +9,7 @@ module.exports = function()
   require('../app/models/users.server.model');
   require('../app/models/userBeacons.server.model');
   require('../app/models/campaigns.server.model');
+  require('../app/models/metrics.server.model');
   require('../app/models/beacons.server.model');
 
   return db;

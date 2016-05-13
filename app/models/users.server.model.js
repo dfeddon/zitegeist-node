@@ -47,11 +47,12 @@ UserSchema.pre('save', function(next)
 
 UserSchema.methods.comparePassword = function(attemptedPassword, callback)
 {
-  console.log("comparing password", attemptedPassword);
+  console.log("comparing password", attemptedPassword, this.password);
+
   bcrypt.compare(attemptedPassword, this.password, function(err, isMatch)
   {
-    console.log("isMatch", isMatch);
-    callback(isMatch);
+    if (err) return callback(err);
+    else callback(null, isMatch);
   });
 };
 // PatronSchema.virtual('fullname').set(function()

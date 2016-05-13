@@ -8,6 +8,7 @@
     "ejs": "^2.4.1",
     "express": "latest",
     "gulp": "latest",
-    "mongoose": "^4.4.8"
+    "mongoose": "^4.4.8",
+    "passport": "^0.3.2"
   }
 }
