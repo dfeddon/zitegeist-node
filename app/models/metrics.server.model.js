@@ -10,6 +10,8 @@ var MetricSchema = new Schema(
     variable:       	{ type:String, required: false },
     //variableAuto:       { type:Boolean, required: false, default:false},
     //stem:           	{ type:String, required: false },
+    multiples:          { type:Boolean, required: false, default: false },
+    indexStyle:         { type:String, enum: ["numeric","alpha","custom","none"], default:"numeric" },
     question:          	{ type:String, required: false },
     response:       	{ type:Array, required: false },
     type:           	{ type:String, enum: ["single","multiple","text","essay"], required: false, default: "single" },
@@ -28,7 +30,8 @@ var MetricSchema = new Schema(
     //libraryLabel:		{ type:String, required:false},
     //libraryDescription: { type:String, required:false},
     //piping:         	[ 'Piping' ],
-    items:          	[ { type:Schema.Types.ObjectId, ref:'MetricItem' } ]
+    //items:          	[ { type:Schema.Types.ObjectId, ref:'MetricItem' } ]
+    items:          	[ 'MetricItem' ]
     //tableItems:     	[ 'TableItems' ],
     //metricLogic:        [ 'Logic' ],
     //permissions:    	[ 'Permissions' ]

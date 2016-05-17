@@ -4,7 +4,7 @@ var mongoose = require('mongoose'),
 var UserBeaconSchema = new Schema(
 {
     beacon:             { type:Schema.Types.ObjectId, ref:'Beacon' },
-    age:                { type:Number, required:false, default:0 },
+    //age:                { type:Number, required:false, default:0 },
     archived:           { type:Boolean, required:false, default:false }
 },
 {

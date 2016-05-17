@@ -6,13 +6,17 @@ var UserSchema = new Schema(
 {
     displayName:        { type:String, required:false },
     username:           { type:String, unique:true, required:false },
-    email:              { type:String, unique:true, required:false },
-    password:           { type:String, required:false },
-    phone:              { type:String, unique:true, required:false },
     addressZip:         { type:String, required:false },
     addressCountry:     { type:String, enum:['us'] },
     language:           { type:String, enum:['en'] },
-    beacons:            [ 'UserBeacons' ]
+    email:              { type:String, unique:true, required:false },
+    password:           { type:String, required:false },
+    phone:              { type:String, unique:true, required:false },
+    brand:              { type:Schema.Types.ObjectId, ref:'Brand' },
+    following:          [ { type:Schema.Types.ObjectId, ref:'BrandsFollowed' } ],
+    campaignsTaken:     [ { type:Schema.Types.ObjectId, ref:'Campaign' } ],
+    campaigns:          [ { type:Schema.Types.ObjectId, ref:'Campaign' } ],
+    beacons:            [ { type:Schema.Types.ObjectId, ref:'UserBeacons' } ]
 },
 {
     timestamps:
@@ -24,7 +28,7 @@ var UserSchema = new Schema(
 
 UserSchema.pre('save', function(next)
 {
-  console.log("pre save", this, this.isModified('password'));
+  //console.log("pre save", this, this.isModified('password'));
   var user = this;
 
   if(user.isModified('password'))
@@ -36,9 +40,9 @@ UserSchema.pre('save', function(next)
         console.log("error saving password", err);
         next();
       }
-      console.log("pass hashed!", hash);
+      //console.log("pass hashed!", hash);
       user.password = hash;
-      console.log('user.pass', user.password);
+      //console.log('user.pass', user.password);
       next();
     });
   }
@@ -47,7 +51,7 @@ UserSchema.pre('save', function(next)
 
 UserSchema.methods.comparePassword = function(attemptedPassword, callback)
 {
-  console.log("comparing password", attemptedPassword, this.password);
+  //console.log("comparing password", attemptedPassword, this.password);
 
   bcrypt.compare(attemptedPassword, this.password, function(err, isMatch)
   {
