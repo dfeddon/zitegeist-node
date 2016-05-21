@@ -15,4 +15,9 @@ var UserBeaconSchema = new Schema(
     }
 });
 
+UserBeaconSchema.methods.getPopulates = function()//("getPopulates", function()
+{
+    return "beacon";
+};
+
 mongoose.model('UserBeacon', UserBeaconSchema);

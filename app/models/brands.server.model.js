@@ -3,10 +3,9 @@ var mongoose = require('mongoose'),
 
 var BrandSchema = new Schema(
 {
-    name:               { type:String, unique:true, required:false },
-    users:              [ 'Users' ],
-    campaigns:          [ 'Campaigns' ],
-    admin:              { type:Schema.Types.ObjectId, ref:'Users' }
+    campaigns:          [ { type:Schema.Types.ObjectId, ref:'Campaign' } ],
+    userPermissions:    [ { type:Schema.Types.ObjectId, ref:'User' } ],
+    owner:              { type:Schema.Types.ObjectId, ref:'User' }
 },
 {
     timestamps:
@@ -16,15 +15,9 @@ var BrandSchema = new Schema(
     }
 });
 
-// BrandSchema.set('validateBeforeSave', true);
-// BrandSchema.path('dateCreated').validate(function(value)
-// {
-//     Ti.API.info('validating...');
-//     if (value===null)
-//     {
-//         value = date.now;
-//     }
-//     return value;
-// });
+BrandSchema.methods.getFollowers = function(callback)
+{
+    return BrandFollowed.find({ brand: this.model("Brand")._id });
+};
 
 mongoose.model('Brand', BrandSchema);

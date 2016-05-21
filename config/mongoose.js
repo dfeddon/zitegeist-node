@@ -11,6 +11,7 @@ module.exports = function()
   require('../app/models/campaigns.server.model');
   require('../app/models/metrics.server.model');
   require('../app/models/beacons.server.model');
+  require('../app/models/campaignSuggested.server.model');
 
   return db;
 };

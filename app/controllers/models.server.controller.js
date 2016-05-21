@@ -15,7 +15,7 @@ exports.create = function(Model)
       }
       else
       {
-        res.json(model);
+        res.status(200).json(model);
       }
     });
   };
@@ -25,6 +25,7 @@ exports.list = function(Model)
 {
   return function(req, res, next)
   {
+    console.log('list');
     // get populates
     var populates = "";
     var instance = new Model();
@@ -41,7 +42,7 @@ exports.list = function(Model)
         }
         else
         {
-            res.json(models);
+            res.status(200).json(models);
         }
     });
   };
@@ -52,14 +53,14 @@ exports.list = function(Model)
 exports.read = function(req, res)
 {
   console.log("read", req.body);
-  res.json(req.model);
+  res.status(200).json(req.model);
 };
 
 exports.listById = function(Model)
 {
   return function(req, res, next, id)
   {
-    console.log("listById", req.body);
+    console.log("listById", id);//, Model);
     Model.findOne(
     {
       _id: id
@@ -68,11 +69,16 @@ exports.listById = function(Model)
     {
       if (err)
       {
-          return next(err);
+        console.log('error', err);
+          //return next(err);
+          return (err);
       }
       else
       {
-          req.model = model;
+        console.log('model', model);
+          //req.model = model;
+          if (model != null)
+          res.status(200).json(model);
           next();
       }
     });
@@ -92,7 +98,7 @@ exports.update = function(Model)
       }
       else
       {
-        res.json(model);
+        res.status(200).json(model);
       }
     });
   };
@@ -111,7 +117,7 @@ exports.delete = function(Model)
       }
       else
       {
-        res.json(req.model);
+        res.status(200).json(req.model);
       }
     });
   };
@@ -136,7 +142,7 @@ exports.searchByName = function(Model)
       else
       {
         console.log('return', models);
-        res.json(models);
+        res.status(200).json(models);
       }
     });
   };
@@ -172,7 +178,8 @@ exports.searchByMultiples = function(Model)
         else
         {
           console.log('return', models);
-          res.json(models);
+          res.status(200).json(models);
+          //return models;
         }
       }
     );
@@ -205,8 +212,8 @@ exports.authenticate = function(Model)
           else
           {
             if (bool === true)
-              res.json(model);
-            else res.json({error: 401, message: "Password mismatch"});
+              res.status(200).json(model);
+            else res.status(401).json({error: 401, message: "Password mismatch"});
           }
         });
       }
