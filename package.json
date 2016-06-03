@@ -1,14 +1,27 @@
 {
   "name": "zitegeist-node",
+  "description": "Zeitgeist API",
   "version": "0.0.1",
+  "private": true,
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.15.0",
     "connect": "^3.4.1",
     "ejs": "^2.4.1",
     "express": "latest",
+    "express-jwt": "^3.4.0",
+    "express-session": "^1.13.0",
     "gulp": "latest",
+    "jsonwebtoken": "^7.0.0",
     "mongoose": "^4.4.8",
-    "passport": "^0.3.2"
+    "morgan": "^1.7.0",
+    "oauth2orize": "^1.3.0",
+    "passport": "^0.3.2",
+    "passport-http": "^0.3.0",
+    "passport-http-bearer": "^1.0.1",
+    "passport-local": "^1.0.0",
+    "passport-oauth2-client-password": "^0.1.2",
+    "underscore": "^1.8.3",
+    "winston": "^2.2.0"
   }
 }

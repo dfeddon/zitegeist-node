@@ -1,12 +1,16 @@
+(function() {'use strict';}());
+
 var mongoose = require('mongoose'),
     bcrypt = require('bcrypt-nodejs'),
-    Brand = mongoose.model("Brand"),
+    //Brand = mongoose.model("Brand"),
+    Brand = require('./brands.server.model'),
     Schema = mongoose.Schema;
 
 var UserSchema = new Schema(
 {
     displayName:        { type:String, required:false },
     username:           { type:String, unique:true, required:false },
+    location:           { type:String, required:false },
     addressZip:         { type:String, required:false },
     addressCountry:     { type:String, enum:['us'] },
     language:           { type:String, enum:['en'] },
@@ -16,8 +20,8 @@ var UserSchema = new Schema(
     brand:              { type:Schema.Types.ObjectId, ref:'Brand' },
     following:          [ { type:Schema.Types.ObjectId, ref:'BrandsFollowed' } ],
     campaignsTaken:     [ { type:Schema.Types.ObjectId, ref:'Campaign' } ],
-    campaigns:          [ { type:Schema.Types.ObjectId, ref:'Campaign' } ],
-    beacons:            [ { type:Schema.Types.ObjectId, ref:'UserBeacon' } ]
+    //campaigns:          [ { type:Schema.Types.ObjectId, ref:'Campaign' } ],
+    beacons:            [ 'UserBeacon' ]
 },
 {
     timestamps:
@@ -34,12 +38,19 @@ UserSchema.methods.getUserBeacons = function(callback)//("getPopulates", functio
   console.log('userid', user._id);
 
   mongoose.model("User").findOne({_id: user._id})
-  .populate("beacons")
-  .exec(
-    function(err, model1)
+  .populate(
     {
-
-      mongoose.model("UserBeacon").populate(model1.beacons, {path:'beacon'}, function(err,model)
+      path:"beacons.beacon",
+      model:'Beacon'
+    }
+  )
+  .exec(
+    function(err, model)
+    {
+      console.log('::m1', model);
+      //mongoose.model("UserBeacon").populate(model1, {path:'beacons.beacon'}, function(err,model)
+      //mongoose.model("UserBeacon").populate(model1, {path:'beacons.beacon'}, function(err,model)
+      //mongoose.model("UserBeacon").populate(model1.beacons.beacon, function(err,model)
       {
 
 
@@ -50,20 +61,20 @@ UserSchema.methods.getUserBeacons = function(callback)//("getPopulates", functio
       }
       else
       {
-        console.log('return', model);
-        if (model != null)
-          return callback(null, model);
+        console.log('return', model.beacons);
+        if (model !== null)
+          return callback(null, model.beacons);
         //else next();
       }
     }
-  )} );
+  })
 };
 
 UserSchema.pre('save', function(next)
 {
-  //console.log("pre save", this, this.isModified('password'));
   var user = this;
 
+  //*
   if (user.isModified('password'))
   {
     bcrypt.hash(user.password, null, null, function(err, hash)
@@ -83,7 +94,8 @@ UserSchema.pre('save', function(next)
       else next();
     });
   }
-  else if (user.isNew)
+  else//*/
+  if (user.isNew)
   {
     this.userBrand(function(err, brand)
     {
@@ -126,12 +138,12 @@ UserSchema.methods.userBrand = function(callback)
 
 UserSchema.methods.comparePassword = function(attemptedPassword, callback)
 {
-  //console.log("comparing password", attemptedPassword, this.password);
+  console.log("comparing password", attemptedPassword, this.password);
 
   bcrypt.compare(attemptedPassword, this.password, function(err, isMatch)
   {
     if (err) return callback(err);
-    else callback(null, isMatch);
+    else return callback(null, isMatch);
   });
 };
 // PatronSchema.virtual('fullname').set(function()

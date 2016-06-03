@@ -3,8 +3,8 @@ var mongoose = require('mongoose'),
 
 var BrandSchema = new Schema(
 {
-    campaigns:          [ { type:Schema.Types.ObjectId, ref:'Campaign' } ],
-    userPermissions:    [ { type:Schema.Types.ObjectId, ref:'User' } ],
+    //campaigns:          [ { type:Schema.Types.ObjectId, ref:'Campaign' } ],
+    //userPermissions:    [ 'UserPermissions' ],
     owner:              { type:Schema.Types.ObjectId, ref:'User' }
 },
 {
@@ -15,9 +15,14 @@ var BrandSchema = new Schema(
     }
 });
 
-BrandSchema.methods.getFollowers = function(callback)
+BrandSchema.methods.getPopulates = function()
 {
-    return BrandFollowed.find({ brand: this.model("Brand")._id });
+    return "owner";
+};
+
+BrandSchema.methods.getFollows = function(callback)
+{
+    return BrandFollow.find({ brand: this.model("Brand")._id });
 };
 
 mongoose.model('Brand', BrandSchema);

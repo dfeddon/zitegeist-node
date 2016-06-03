@@ -14,7 +14,7 @@ var CampaignSchema = new Schema(
     isComplete:         { type:Boolean, default:false },
     isPrivate:          { type:Boolean, default:false },
     //isSuggested:        { type:Boolean, default:false },
-    owner:              { type:Schema.Types.ObjectId, ref:'User' },
+    brand:              { type:Schema.Types.ObjectId, ref:'Brand' },
     suggested:          [ 'CampaignSuggested' ],
     //reports:            [ 'Reports' ],
     metrics:            [ 'Metrics' ],
@@ -31,7 +31,7 @@ var CampaignSchema = new Schema(
 
 CampaignSchema.methods.getPopulates = function()//("getPopulates", function()
 {
-    return "owner";
+    return "brand";
 };
 
 mongoose.model('Campaign', CampaignSchema);

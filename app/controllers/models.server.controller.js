@@ -1,24 +1,27 @@
 //var Brand = require('mongoose').model('Brand');
+var ResourceProvider = function(){};
 
-exports.create = function(Model)
+///////////////////
+// constants
+///////////////////
+var ERROR_RESOURCE_NOT_FOUND = 'Error: Requested resource {:id} not found';
+
+ResourceProvider.prototype.create = function(Model, req, res, next)
 {
-  return function(req, res, next)
+  console.log("posting", req.body);
+  var model = new Model(req.body);
+  model.save(function(err)
   {
-    console.log("posting", req.body);
-    var model = new Model(req.body);
-    model.save(function(err)
+    if (err)
     {
-      if (err)
-      {
-        console.log('err', err);
-        return next(err);
-      }
-      else
-      {
-        res.status(200).json(model);
-      }
-    });
-  };
+      console.log('err', err);
+      return next(err);
+    }
+    else
+    {
+      res.status(200).json(model);
+    }
+  });
 };
 
 exports.list = function(Model)
@@ -26,6 +29,7 @@ exports.list = function(Model)
   return function(req, res, next)
   {
     console.log('list');
+    console.log(Model);
     // get populates
     var populates = "";
     var instance = new Model();
@@ -48,6 +52,56 @@ exports.list = function(Model)
   };
 };
 
+ResourceProvider.prototype.findAll = function(model, req, res, callback)
+{
+  console.log('findall');//, res.locals);//, model, req, res, callback);
+  // get size of querystring (if any)
+  //size = res.locals.getQuerySize();
+
+  //console.log('req: ' + JSON.stringify(req));
+
+  // search querystring
+  var query = res.locals.queryToMongo();
+  //var query = {};
+
+  // implement permissioning (in query)
+  console.log("+++++++++++++query");
+  console.log(query);
+  // console.log(req.query);
+  // get all items
+  //data['model']
+  model
+  .find(query)
+  //.populate(data['populate'])
+  .exec (function (err,items)
+  {
+      if (err)
+        return callback(err);
+      else callback(items);
+  });
+};
+
+ResourceProvider.prototype.findById = function(model, req, res, callback)
+{
+  console.log('findbyid');
+  console.log('res.locals', res.locals);
+    var id = req.params.id;
+
+    model//data['model']
+    .findById(id)
+    //.populate(data['populate'])//'userPermissions')
+    .exec (function(err, item)
+    {
+        if (err)
+        {
+       	    callback(err);
+        }
+        else
+        {
+            callback(item);
+        }
+    });
+};
 // The read() method just responds with a JSON
 // representation of the req.user object.
 exports.read = function(req, res)
@@ -60,48 +114,51 @@ exports.listById = function(Model)
 {
   return function(req, res, next, id)
   {
-    console.log("listById", id);//, Model);
-    Model.findOne(
-    {
-      _id: id
-    },
+    //console.log(Model);
+    console.log("listById", id, req.params.id);
+
+    Model.findById(id)
+    .exec(
     function(err, model)
     {
       if (err)
       {
         console.log('error', err);
-          //return next(err);
-          return (err);
+        //return next(err);
+        return (err);
       }
       else
       {
         console.log('model', model);
-          //req.model = model;
-          if (model != null)
+        //req.model = model;
+        if (model != null)
           res.status(200).json(model);
-          next();
+        else res.status(204).json(model);
+        //next();
       }
     });
   };
 };
 
-exports.update = function(Model)
+ResourceProvider.prototype.update = function(model, req, res, callback)//Model)
 {
-  return function(req, res, next)
-  {
-    console.log("update", req.body, req.params);
-    Model.findByIdAndUpdate(req.params.id, req.body, function(err, model)
+  //return function(req, res, next)
+  //{
+    console.log("update (provider)", req.params);
+    model.findByIdAndUpdate(req.params.id, { $set: req.body },
+    function(err, model)
     {
       if (err)
       {
-        return next(err);
+        return callback(err);
       }
+      if (model == null) return callback(ERROR_RESOURCE_NOT_FOUND);
       else
       {
-        res.status(200).json(model);
+        return callback(res.status(200).json(model));
       }
     });
-  };
+  //};
 };
 
 exports.delete = function(Model)
@@ -220,3 +277,5 @@ exports.authenticate = function(Model)
     });
   };
 };
+
+module.exports.ResourceProvider = ResourceProvider;

@@ -1,44 +1,66 @@
-exports.authByPassword = function(Model)
-{
-  return function(req, res, next)//, id)
-  {
-    console.log('body', req.body);
-    Model.findOne(
-    {
-      username: req.body.username
-    },
-    function(err, model)
-    {
-      if (err)
-      {
-          return next(err);
-      }
-      else
-      {
-        console.log("got it!", model);
-        model.comparePassword(req.body.password, function(results, err)
-        {
-          if (err)
-            console.log("error", err);
-          else
-          {
-            console.log("results", results);
-            if (results === true)
-            {
-              console.log("login success!");
-              res.json(model);
-            }
-            else
-            {
-              console.log("login failed");
-              var error = {error: "loginFailed"};
-              res.json(error);
-            }
-          }
+var config                  = require('../../config/config');
+var passport                = require('passport');
+var BasicStrategy           = require('passport-http').BasicStrategy;
+var ClientPasswordStrategy  = require('passport-oauth2-client-password').Strategy;
+var BearerStrategy          = require('passport-http-bearer').Strategy;
+var User                    = require('mongoose').model('User');
+var Client                  = require('mongoose').model('Client');
+var AccessToken             = require('mongoose').model('AccessToken');
+var RefreshToken            = require('mongoose').model('RefreshToken');
+
+passport.use(new BasicStrategy(
+    function(username, password, done) {console.log("HIHIHIHIHIHI2");
+        Client.findOne({ clientId: username }, function(err, client) {
+            if (err) { return done(err); }
+            if (!client) { return done(null, false); }
+            if (client.clientSecret != password) { return done(null, false); }
+
+            return done(null, client);
         });
-          //req.model = model;
-          //next();
-      }
-    });
-  };
-};
+    }
+));
+
+passport.use(new ClientPasswordStrategy(
+    function(clientId, clientSecret, done) {console.log(":: "+clientId,clientSecret);
+        Client.findOne({ clientId: clientId }, function(err, client)
+        {
+            console.log(client);
+            if (err) { return done(err); }
+            if (!client) { return done(null, false); }
+            if (client.secret != clientSecret) { return done(null, false); }
+
+            return done(null, client);
+        });
+    }
+));
+
+passport.use(new
+ BearerStrategy(
+    function(accessToken, done)
+    {
+        console.log("BearerStrategy", accessToken);
+        AccessToken.findOne({ token: accessToken }, function(err, token)
+        {
+            console.log("token "+accessToken+"/"+config.tokenTime, token);
+            if (err) console.log("error", err);
+            if (err) { return done(err); }
+            if (!token) { return done(null, false); }
+            console.log("token valid, checking expiration...");
+            if( Math.round((Date.now()-token.dateCreated)/1000) > config.tokenTime ) {
+                AccessToken.remove({ token: accessToken }, function (err) {
+                    if (err) return done(err);
+                });
+                return done(null, false, { message: 'Token expired' });
+            }
+
+            User.findById(token.userId, function(err, user) {
+                //console.log("ccccc")
+                if (err) { return done(err); }
+                if (!user) { return done(null, false, { message: 'Unknown user' }); }
+
+                var info = { scope: '*' };
+                done(null, user, info);
+            });
+        });
+    }
+));

@@ -41,3 +41,42 @@ exports.listById = function(Model)
     });
   };
 };
+
+exports.authenticate = function(Model)
+{
+  return function(req, res, next)
+  {
+    //console.log('header', req.headers);
+    //console.log(req.body.email, req.body.password, req.body);
+
+    Model.findOne(
+    {
+      email: req.body.email
+    },
+    function(err, model)
+    {
+      if (err)
+        console.log('err', err);
+      else
+      {
+        if (!model) return res.json({error: 401, message: "User not found"});
+
+        console.log('success', model);
+        model.comparePassword(req.body.password, function(err, bool)
+        {
+          if (err)
+            console.log("err", err);
+          else
+          {
+            if (bool === true)
+            {
+              // get users brandFollows
+              res.status(200).json(model);
+            }
+            else res.status(401).json({error: 401, message: "Password mismatch"});
+          }
+        });
+      }
+    });
+  };
+};
