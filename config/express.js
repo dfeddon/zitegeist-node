@@ -303,6 +303,11 @@ module.exports = function()
     app.route('/oauth2/token')
       .post(oauth2Controller.token);
 
+    //var refreshTokenController = require('../app/controllers/tokens.server.controller');
+    //var RefreshModel = require('../app/models/refreshTokens.server.model');
+    app.route('/oauth2/refreshToken')
+        .post(oauth2Controller.refreshToken);
+
     // globally set auth middlewares
     app.get('/api/*', auth);
     app.put('/api/*', auth);
@@ -318,6 +323,7 @@ module.exports = function()
     //app.set('views', './app/views');
     app.set('view engine', 'ejs');
 
+    // routes
     require('../app/routes/index.server.routes.js')(app);
     require('../app/routes/brands.server.routes.js')(app);
     require('../app/routes/brandFollows.server.routes.js')(app);
@@ -325,7 +331,7 @@ module.exports = function()
     require('../app/routes/userBeacons.server.routes.js')(app);
     require('../app/routes/campaigns.server.routes.js')(app);
     require('../app/routes/beacons.server.routes.js')(app);
-    require('../app/routes/auth.server.routes.js')(app);
+    //require('../app/routes/auth.server.routes.js')(app);
     require('../app/routes/metrics.server.routes.js')(app);
     require('../app/routes/clients.server.routes.js')(app);
 

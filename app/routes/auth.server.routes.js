@@ -1,7 +1,9 @@
-//var controller = require('../../app/controllers/auth.server.controller');
-var Model = require('mongoose').model('User');
-
-module.exports = function(app)
-{
-  //app.route('/auth').post(controller.authByPassword(Model));
-};
+// var refreshTokenController = require('../../app/controllers/tokens.server.controller');
+// var Model = require('mongoose').model('RefreshToken');
+//
+// module.exports = function(app)
+// {
+//   //app.route('/auth').post(controller.authByPassword(Model));
+//   app.route('/oauth2/refreshToken')
+//     .post(refreshTokenController.refreshToken(Model));
+// };

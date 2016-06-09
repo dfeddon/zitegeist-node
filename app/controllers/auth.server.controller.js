@@ -1,8 +1,10 @@
 var config                  = require('../../config/config');
 var passport                = require('passport');
+//var refresh                 = require('passport-oauth2-refresh');
 var BasicStrategy           = require('passport-http').BasicStrategy;
 var ClientPasswordStrategy  = require('passport-oauth2-client-password').Strategy;
 var BearerStrategy          = require('passport-http-bearer').Strategy;
+var PasswordGrantStrategy   = require('passport-oauth2-password-grant');
 var User                    = require('mongoose').model('User');
 var Client                  = require('mongoose').model('Client');
 var AccessToken             = require('mongoose').model('AccessToken');
@@ -21,7 +23,9 @@ passport.use(new BasicStrategy(
 ));
 
 passport.use(new ClientPasswordStrategy(
-    function(clientId, clientSecret, done) {console.log(":: "+clientId,clientSecret);
+    function(clientId, clientSecret, done)
+    {
+        console.log("ClientPasswordStrategy: "+clientId, clientSecret);
         Client.findOne({ clientId: clientId }, function(err, client)
         {
             console.log(client);
@@ -46,8 +50,10 @@ passport.use(new
             if (err) { return done(err); }
             if (!token) { return done(null, false); }
             console.log("token valid, checking expiration...");
-            if( Math.round((Date.now()-token.dateCreated)/1000) > config.tokenTime ) {
-                AccessToken.remove({ token: accessToken }, function (err) {
+            if( Math.round((Date.now()-token.dateCreated)/1000) > config.tokenTime )
+            {
+                AccessToken.remove({ token: accessToken }, function (err)
+                {
                     if (err) return done(err);
                 });
                 return done(null, false, { message: 'Token expired' });
@@ -64,3 +70,14 @@ passport.use(new
         });
     }
 ));
+
+passport.use(new PasswordGrantStrategy(
+{
+    tokenURL: 'http://localhost/oauth2/refreshToken',
+    clientID: "this_is_my_id"
+},
+function(accessToken, refreshToken, profile, done)
+{
+    console.log('PasswordGrantStrategy');
+    done(null, profile);
+}));
