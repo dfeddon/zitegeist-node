@@ -17,11 +17,14 @@ var UserSchema = new Schema(
     email:              { type:String, unique:true, required:false },
     password:           { type:String, required:false },
     phone:              { type:String, unique:true, required:false },
+    image:              { type:String, required:false },
+    backgroundImage:    { type:String, required:false },
     brand:              { type:Schema.Types.ObjectId, ref:'Brand' },
     following:          [ { type:Schema.Types.ObjectId, ref:'BrandsFollowed' } ],
     campaignsTaken:     [ { type:Schema.Types.ObjectId, ref:'Campaign' } ],
     //campaigns:          [ { type:Schema.Types.ObjectId, ref:'Campaign' } ],
-    beacons:            [ 'UserBeacon' ]
+    beacons:            [ 'UserBeacon' ],
+    demographics:       [ 'Demographic' ]
 },
 {
     timestamps:

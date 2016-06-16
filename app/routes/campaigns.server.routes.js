@@ -17,7 +17,12 @@ module.exports = function(app)
 
   app.route('/api/campaigns/beacons/search/:multi')
     .get(campaignController.searchByMultiples(Model));
+
+  app.route('/api/campaigns/brand/:brandId')
+    .get(campaignController.searchByBrandId(Model));
+
   app.param('multi', campaignController.searchByMultiples(Model));
+  app.param('brandId', campaignController.searchByBrandId(Model));
 };
 
 

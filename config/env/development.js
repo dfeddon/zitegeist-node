@@ -1,6 +1,6 @@
 var port = 1337;
 var secondsInAMinute = 60;
-var totalMinutes = 1; // 120 = 2 hours
+var totalMinutes = 120; // 120 = 2 hours
 
 module.exports =
 {

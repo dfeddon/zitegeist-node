@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "aws-sdk": "^2.3.19",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.15.0",
     "connect": "^3.4.1",

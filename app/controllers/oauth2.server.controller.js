@@ -148,7 +148,7 @@ exports.token = [
     server.errorHandler()
 ];
 
-exports.refreshTokenOff = [//function(req,res)
+/*exports.refreshTokenOff = [//function(req,res)
 //{
     console.log("refreshToken"),
     //this.refreshToken(function(err, tok){console.log("Derek");});
@@ -158,7 +158,7 @@ exports.refreshTokenOff = [//function(req,res)
             //passport.authenticate(['basic', 'oauth2-client-password'], { session: false })
         })
 //};
-];
+];*/
 
 exports.refreshToken = function(req, res, next)
 {

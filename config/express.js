@@ -15,20 +15,19 @@ const winston = require('winston');
 const morgan = require('morgan');
 const passport = require('passport');
 const ejs = require('ejs');
+//const awssdk = require('./aws');
+//const AWS = require('aws-sdk');
 //const authController = require('../app/controllers/auth.server.controller')
-const Strategy = require('passport-local');
+//const Strategy = require('passport-local');
 
 module.exports = function()
 {
     const app = express();
+    //console.log(process.env['HOME']);
 
     ////////////////////////////////////
     // passport
     ////////////////////////////////////
-    /*const authenticate = expressJwt(
-    {
-        secret: config.secret
-    });*/
     app.use(passport.initialize());
     app.use(session(
     {
@@ -36,57 +35,12 @@ module.exports = function()
         saveUninitialized: true,
         resave: true
     }));
-    //app.use(passport.session());
-
-    /*function serialize(req, res, next)
-    {
-        db.updateOrCreate(req.user, function(err, user)
-        {
-            if (err)
-            {
-                return next(err);
-            }
-            // we store the updated information in req.user again
-            req.user = { id: user.id };
-            next();
-        });
-    }
-
-    function generateToken(req, res, next)
-    {
-        req.token = jwt.sign(
-        {
-            id: req.user.id,
-        }, config.secret,
-        {
-            expiresIn: config.tokenTime
-        });
-
-        next();
-    }
-
-    function respond(req, res)
-    {
-        res.status(200).json(
-        {
-            user: req.user,
-            token: req.token
-        });
-    }*/
-
-    /*const db =
-    {
-        updateOrCreate: function(user, cb)
-        {
-            // db dummy, we just cb the user
-            cb(null, user);
-        }
-    };*/
 
     ////////////////////////////
     // local scope helpers
     ////////////////////////////
-    app.use(function(req, res, next) {
+    app.use(function(req, res, next)
+    {
         // return size (no. name-value pairs) of query string
         res.locals.getQuerySize = function() {
             //var obj = req.query;
@@ -273,38 +227,15 @@ module.exports = function()
     // log requests to console
     app.use(morgan('dev'));
 
-    // auth
-    /*app.post('/auth', passport.authenticate(
-        'local',
-        {
-            session:false
-        }),
-        serialize,
-        generateToken,
-        respond
-    );
-
-    app.get('/me', authenticate, function(req, res)
-    {
-      res.status(200).json(req.user);
-  });*/
-
     const oauth2Controller = require('../app/controllers/oauth2.server.controller');
     require('../app/controllers/auth.server.controller');
     //const auth = passport.authenticate('basic', { session : false });
     const auth = passport.authenticate('bearer', { session : false });
 
-    // Create endpoint handlers for oauth2 authorize
-    /*app.route('/oauth2/authorize')
-      .get(auth, oauth2Controller.authorization)
-      .post(auth, oauth2Controller.decision);*/
-
     // Create endpoint handlers for oauth2 token
     app.route('/oauth2/token')
       .post(oauth2Controller.token);
 
-    //var refreshTokenController = require('../app/controllers/tokens.server.controller');
-    //var RefreshModel = require('../app/models/refreshTokens.server.model');
     app.route('/oauth2/refreshToken')
         .post(oauth2Controller.refreshToken);
 
@@ -313,14 +244,7 @@ module.exports = function()
     app.put('/api/*', auth);
     app.post('/api/*', auth);
     app.delete('/api/*', auth);
-    //var yesAuth = passport.authenticate('basic', { session : false });
 
-    // app.get('/api/*', auth);
-    // app.put('/api/*', auth);
-    // app.post('/api/*', auth);
-    // app.delete('/api/*', auth);
-
-    //app.set('views', './app/views');
     app.set('view engine', 'ejs');
 
     // routes
