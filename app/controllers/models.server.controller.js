@@ -35,6 +35,7 @@ exports.list = function(Model)
     var instance = new Model();
     if (instance.getPopulates)
       populates = instance.getPopulates();
+    console.log('populating', populates);
 
     Model.find({})
     .populate(populates)
@@ -63,15 +64,22 @@ ResourceProvider.prototype.findAll = function(model, req, res, callback)
   // search querystring
   var query = res.locals.queryToMongo();
   //var query = {};
+  // get populates
+  var populates = "";
+  var instance = new model();
+  if (instance.getPopulates)
+    populates = instance.getPopulates();
+  console.log('populating', populates);
 
   // implement permissioning (in query)
-  console.log("+++++++++++++query");
+  //console.log("+++++++++++++query", query);
   console.log(query);
   // console.log(req.query);
   // get all items
   //data['model']
   model
   .find(query)
+  .populate(populates)
   //.populate(data['populate'])
   .exec (function (err,items)
   {

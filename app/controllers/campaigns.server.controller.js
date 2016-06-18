@@ -1,3 +1,4 @@
+var mongoose = require('mongoose');
 exports.searchByMultiples = function(Model)
 {
   //console.log("searchByMultiples");
@@ -6,16 +7,17 @@ exports.searchByMultiples = function(Model)
     console.log('search by multiples', multi);//, qry, Model);
 
     // get populates
-    var populates = "";
-    var instance = new Model();
-    if (instance.getPopulates)
-      populates = instance.getPopulates();
+    //var populates = "";
+    // var instance = new Model();
+    // if (instance.getPopulates)
+    //   populates = instance.getPopulates();
 
     // consolidate ids
     var ids = multi.split(",");
+    //ids = [mongoose.Types.ObjectId("5709236964c0c51739826745")];
     var searchQuery = {beacons: {$in: ids}};
     // TODO: exclude inactive/completed campaigns
-    //console.log("query", searchQuery);
+    console.log("query", searchQuery);
     Model.find(searchQuery)
     .populate
     (
