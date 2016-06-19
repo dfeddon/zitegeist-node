@@ -4,9 +4,9 @@ var mongoose = require('mongoose'),
 var DemographicSchema = new Schema(
 {
     name:          	    { type:String, required: false },
-    description:    	{ type:String, required: false },
-    status:             { type:String, enum:["active","inactive","test"], default:"active" },
-    type:           	{ type:String, enum: ["gender","age","education","income","rank","country","zipcode","custom"], required: true, default: "custom" },
+    // description:    	{ type:String, required: false },
+    // status:             { type:String, enum:["active","inactive","test"], default:"active" },
+    type:           	{ type:String, enum: ["gender","age","zipcode","education","income","country","custom"], required: true, default: "custom" },
     metrics:          	[ 'Metric' ]
 },
 {

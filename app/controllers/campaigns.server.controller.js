@@ -14,8 +14,16 @@ exports.searchByMultiples = function(Model)
 
     // consolidate ids
     var ids = multi.split(",");
+    // convert id strings to objectId
+    for (var i = 0; i < ids.length; i++)
+    {
+      ids[i] = mongoose.Types.ObjectId(ids[i]);
+    }
+    console.log('ids', ids);
     //ids = [mongoose.Types.ObjectId("5709236964c0c51739826745")];
-    var searchQuery = {beacons: {$in: ids}};
+    //var searchQuery = { "enagement": { "$exists":true }, "engagement.beacons": { $in: ids } };
+    //var searchQuery = { beacons: { $in: ids } };
+    var searchQuery = { "engagement.beacons": { $in: ids } };
     // TODO: exclude inactive/completed campaigns
     console.log("query", searchQuery);
     Model.find(searchQuery)

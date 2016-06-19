@@ -14,6 +14,7 @@ module.exports = function()
   require('../app/models/metrics.server.model');
   require('../app/models/beacons.server.model');
   require('../app/models/campaignSuggested.server.model');
+  require('../app/models/campaignEngagements.server.model');
   require('../app/models/clients.server.model');
   require('../app/models/accessTokens.server.model');
   require('../app/models/refreshTokens.server.model');
