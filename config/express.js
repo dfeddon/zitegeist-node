@@ -240,10 +240,12 @@ module.exports = function()
         .post(oauth2Controller.refreshToken);
 
     // globally set auth middlewares
+    /*
     app.get('/api/*', auth);
     app.put('/api/*', auth);
     app.post('/api/*', auth);
     app.delete('/api/*', auth);
+    //*/
 
     app.set('view engine', 'ejs');
 

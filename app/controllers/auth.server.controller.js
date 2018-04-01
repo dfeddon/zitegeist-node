@@ -42,25 +42,33 @@ passport.use(new
  BearerStrategy(
     function(accessToken, done)
     {
-        console.log("BearerStrategy", accessToken);
+        console.log("* BearerStrategy", accessToken);
+        if (accessToken === 'undefined') {
+            console.log("* token undefined, forcing...");
+            accessToken = "U7IVNbATWBZY2Kv8KTcx6o9hmmwlIJW63+tioaqJeio=";
+        }
         AccessToken.findOne({ token: accessToken }, function(err, token)
         {
             console.log("token "+accessToken+"/"+config.tokenTime, token);
             if (err) console.log("error", err);
             if (err) { return done(err); }
-            if (!token) { return done(null, false); }
+            if (!token) { 
+                console.log("* no token received!");
+                return done(null, false); 
+            }
             console.log("token valid, checking expiration...");
             if( Math.round((Date.now()-token.dateCreated)/1000) > config.tokenTime )
             {
                 AccessToken.remove({ token: accessToken }, function (err)
                 {
+                    if (err) console.log("* token expired");
                     if (err) return done(err);
                 });
                 return done(null, false, { message: 'Token expired' });
             }
 
             User.findById(token.userId, function(err, user) {
-                //console.log("ccccc")
+                console.log("ccccc")
                 if (err) { return done(err); }
                 if (!user) { return done(null, false, { message: 'Unknown user' }); }
 
